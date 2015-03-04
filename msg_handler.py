@@ -24,5 +24,5 @@ class MessageHandler(object):
 
     def temperatureHandle(self):
         response = {'status':0,'err_msg':'','info':self.key}
-        time.sleep(2)
+        time.sleep(1)
         return json.dumps(response)
