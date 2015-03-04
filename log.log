@@ -3,3 +3,17 @@ INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TE
 INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
 INFO:root:receive message {"info": "LIGHT_ON", "uid": 1, "key": "LIGHT_ON"}
 INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "LIGHT_ON", "uid": 1, "key": "LIGHT_ON"}
+INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "LIGHT_ON", "uid": 1, "key": "LIGHT_ON"}
+INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "REAL_TEMPERATURE", "uid": 1, "key": "REAL_TEMPERATURE"}
+INFO:root:receive message {"info": "LIGHT_ON", "uid": 1, "key": "LIGHT_ON"}
+INFO:root:receive message {"info": "LIGHT_OFF", "uid": 1, "key": "LIGHT_OFF"}
+INFO:root:receive message {"info": "LIGHT_ON", "uid": 1, "key": "LIGHT_ON"}
+INFO:root:receive message {"info": "LIGHT_OFF", "uid": 1, "key": "LIGHT_OFF"}

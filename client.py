@@ -7,6 +7,8 @@ import json
 import msg_handler
 import platform
 import logging
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                datefmt='%a, %d %b %Y %H:%M:%S')
 
 def set_keepalive_linux(sock, after_idle_sec=1, interval_sec=3, max_fails=5):
     """Set TCP keepalive on an open socket.
@@ -41,7 +43,6 @@ def login(s):
         s.close()
 
 def main():
-    logging.basicConfig(level=logging.DEBUG)
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     system_name = platform.system()
     if system_name == 'Darwin':
