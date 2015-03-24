@@ -3,6 +3,8 @@ device_id: 1
 server_host: '54.148.6.4'
 server_port: 8888
 
+ht_sensor_channel: 17
+
 logging:
   version: 1
   formatters:
