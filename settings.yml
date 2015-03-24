@@ -1,0 +1,37 @@
+---
+device_id: 1
+server_host: '54.148.6.4'
+server_port: 8888
+
+logging:
+  version: 1
+  formatters:
+    verbose:
+      format: "%(asctime)s %(levelname)s %(name)s %(process)d:%(thread)d %(pathname)s+%(lineno)d:%(funcName)s ~ %(message)s"
+    normal:
+      format: "%(asctime)s %(levelname)s %(name)s %(process)d:%(thread)d %(filename)s+%(lineno)d ~ %(message)s"
+  handlers:
+    file_client_debug:
+      level: DEBUG
+      class: logging.handlers.WatchedFileHandler
+      formatter: verbose
+      filename: /var/log/raspberry-client/client.debug.log
+    file_client_error:
+      level: ERROR
+      class: logging.handlers.WatchedFileHandler
+      formatter: verbose
+      filename: /var/log/raspberry-client/client.error.log
+    file_client:
+      level: INFO
+      class: logging.handlers.WatchedFileHandler
+      formatter: verbose
+      filename: /var/log/raspberry-client/client.log
+  loggers:
+    client:
+      level: DEBUG
+      handlers:
+        - file_client
+        - file_client_error
+        - file_client_debug
+      qualname: client
+      propagate: no

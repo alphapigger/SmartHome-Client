@@ -1,14 +1,15 @@
 #! /usr/bin/env python
 # coding:utf-8
-
 import socket
-import config
 import json
-import msg_handler
 import platform
 import logging
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
-                datefmt='%a, %d %b %Y %H:%M:%S')
+
+from . import settings
+from . import msg_handler
+
+logger = logging.getLogger(__name__)
+
 
 def set_keepalive_linux(sock, after_idle_sec=1, interval_sec=3, max_fails=5):
     """Set TCP keepalive on an open socket.
@@ -21,6 +22,7 @@ def set_keepalive_linux(sock, after_idle_sec=1, interval_sec=3, max_fails=5):
     sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, interval_sec)
     sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, max_fails)
 
+
 def set_keepalive_osx(sock, after_idle_sec=1, interval_sec=3, max_fails=5):
     """Set TCP keepalive on an open socket.
     sends a keepalive ping once every 3 seconds (interval_sec)
@@ -30,39 +32,43 @@ def set_keepalive_osx(sock, after_idle_sec=1, interval_sec=3, max_fails=5):
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
     sock.setsockopt(socket.IPPROTO_TCP, TCP_KEEPALIVE, interval_sec)
 
+
 def login(s):
-    login_msg = {'device_id':config.device_id,'info':'login'}
+    login_msg = {'device_id': settings['device_id'], 'info': 'login'}
     s.send(json.dumps(login_msg))
     res = json.loads(s.recv(1024))
     status = res['status']
     if status == 0:
-        print 'Login Success'
+        # print 'Login Success'
+        logger.info('Login Success')
         handleMessage(s)
     elif status == -1:
         print res['err_msg']
         s.close()
 
-def main():
-    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
+def start():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     system_name = platform.system()
     if system_name == 'Darwin':
         set_keepalive_osx(s)
     elif system_name == 'Linux':
-        #利用keepalive保持长连接
+        # 利用keepalive保持长连接
         set_keepalive_linux(s)
-    s.connect((config.server_host,config.server_port))
+    s.connect((settings['server_host'], settings['server_port']))
     login(s)
+
 
 def handleMessage(s):
     while True:
         # 持续读取服务器端消息
         recv_msg = s.recv(1024)
-        logging.info('receive message %s' % recv_msg)
+        logger.info('receive message %s' % recv_msg)
         req = json.loads(recv_msg)
-        key = req.get('key','')
-        info = req.get('info','')
+        key = req.get('key', '')
+        info = req.get('info', '')
         msg_handle = msg_handler.MessageHandler(key, info)
         s.send(msg_handle.handle())
 
 if __name__ == '__main__':
-    main()
+    start()
