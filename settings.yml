@@ -28,21 +28,21 @@ logging:
       class: logging.handlers.WatchedFileHandler
       formatter: verbose
       filename: /var/log/raspberry-client/client.log
-    file_network_debug:
+    file_tool_debug:
       level: DEBUG
       class: logging.handlers.WatchedFileHandler
       formatter: verbose
-      filename: /var/log/raspberry-client/network.debug.log
-    file_network_error:
+      filename: /var/log/raspberry-client/tool.debug.log
+    file_tool_error:
       level: ERROR
       class: logging.handlers.WatchedFileHandler
       formatter: verbose
-      filename: /var/log/raspberry-client/network.error.log
-    file_network:
+      filename: /var/log/raspberry-client/tool.error.log
+    file_tool:
       level: INFO
       class: logging.handlers.WatchedFileHandler
       formatter: verbose
-      filename: /var/log/raspberry-client/network.log
+      filename: /var/log/raspberry-client/tool.log
   loggers:
     client:
       level: DEBUG
@@ -52,12 +52,12 @@ logging:
         - file_client_debug
       qualname: client
       propagate: no
-  root:
-    level: DEBUG
-    handlers:
-      - file_network_debug
-      - file_network_error
-      - file_network
-    qualname: network
-    propagate: no
+    tool:
+      level: DEBUG
+      handlers:
+        - file_tool_debug
+        - file_tool_error
+        - file_tool
+      qualname: tool
+      propagate: no
 

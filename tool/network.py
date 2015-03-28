@@ -5,11 +5,6 @@
 import threading
 import time
 import logging
-import yaml
-import logging.config
-
-settings = yaml.load(open('settings.yml'))
-logging.config.dictConfig(settings['logging'])
 
 from lib.ping import network_test
 
@@ -30,9 +25,9 @@ def manage():
             time.sleep(10)
 
 
-def main():
+def deamon():
     t = threading.Thread(target=manage)
     t.start()
 
 if __name__ == '__main__':
-    main()
+    deamon()
