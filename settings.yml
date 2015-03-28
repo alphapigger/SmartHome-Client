@@ -52,12 +52,12 @@ logging:
         - file_client_debug
       qualname: client
       propagate: no
-    tools.network:
-      level: DEBUG
-      handlers:
-        - file_network_debug
-        - file_network
-        - file_network
-      qualname: network
-      propagate: no
+  root:
+    level: DEBUG
+    handlers:
+      - file_network_debug
+      - file_network_error
+      - file_network
+    qualname: network
+    propagate: no
 
