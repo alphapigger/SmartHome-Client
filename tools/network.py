@@ -4,22 +4,26 @@
 
 import threading
 import time
+import logging
 
 from lib.ping import network_test
+
+logger = logging.getLogger(__name__)
 
 
 def manage():
     network_status = 0
     while True:
         if network_test('www.baidu.com'):
-            print 'Network Ok'
+            logger.info('network is ok')
             if network_status == 0:
-                print 'Restart Program'
                 network_status = 1
+                time.sleep(60)
         else:
-            print 'Network error'
+            logger.error('network error')
             network_status == 0
-        time.sleep(10)
+            time.sleep(10)
+
 
 def main():
     t = threading.Thread(target=manage)
