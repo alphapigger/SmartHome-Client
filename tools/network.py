@@ -5,6 +5,11 @@
 import threading
 import time
 import logging
+import yaml
+import logging.config
+
+settings = yaml.load(open('settings.yml'))
+logging.config.dictConfig(settings['logging'])
 
 from lib.ping import network_test
 
