@@ -3,11 +3,15 @@ help:
 	@echo '												'
 	@echo 'Usage:										'
 	@echo '   make requirements	install requirements	'
-	@echo '   make deamon set supervisor cfg'
+	@echo '   make build set supervisor cfg'
+	@echo '   make supervisord set supervisord start with system'
 
 requirements:
 	pip install -q -r requirements.txt -i https://pypi.python.org/simple
 
-deamon:
-	echo 'supervisord' | tee -a /etc/rc.local
+build:
 	cp supervisor/client.ini /etc/supervisor.d/
+
+supervisord:
+	cp supervisor/supervisord /etc/init.d/
+	update-rc.d supervisord defaults
