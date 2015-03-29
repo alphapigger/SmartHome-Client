@@ -39,7 +39,6 @@ def login(s):
     res = json.loads(s.recv(1024))
     status = res['status']
     if status == 0:
-        # print 'Login Success'
         logger.info('Login Success')
         handleMessage(s)
     elif status == -1:
@@ -53,7 +52,6 @@ def start():
     if system_name == 'Darwin':
         set_keepalive_osx(s)
     elif system_name == 'Linux':
-        # 利用keepalive保持长连接
         set_keepalive_linux(s)
     s.connect((settings['server_host'], settings['server_port']))
     login(s)

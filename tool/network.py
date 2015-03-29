@@ -24,7 +24,7 @@ def manage():
         else:
             logger.error('network error')
             network_status == 0
-            time.sleep(10)
+            time.sleep(20)
 
 
 def restart_client():

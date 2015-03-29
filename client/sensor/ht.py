@@ -19,7 +19,7 @@ class HTSensor(object):
         self.temperature = None
 
     def _run(self):
-        time.sleep(1)
+        time.sleep(3)
         gpio.setwarnings(False)
         gpio.setmode(gpio.BCM)
         gpio.setup(self.channel, gpio.OUT)
