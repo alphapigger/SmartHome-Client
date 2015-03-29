@@ -88,8 +88,11 @@ def get_data():
                     db=settings['redis_db'])
     now = int(time.strftime('%Y%m%d%H%M'))
     old = now - 10  # 10分钟之前
-    h_t = r.zrangebyscore('ht', old, now)
-    humidity, temperature = h_t.split(' ')
+    h_t = r.zrangebyscore('ht', old, now)[-1]
+    if h_t:
+        humidity, temperature = h_t.split(' ')
+    else:
+        humidity, temperature = None, None
     return humidity, temperature
 
 if __name__ == '__main__':
