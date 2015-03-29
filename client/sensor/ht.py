@@ -105,7 +105,7 @@ def get_data():
             ht = HTSensor()
             humidity, temperature = ht.acquire()
             if humidity and temperature:
-                r.zadd("ht", '%s %s' % (humidity, temperature), int(now))
+                r.zadd("ht", '%s %s' % (humidity, temperature), now)
     else:
         humidity, temperature = None, None
     return humidity, temperature
