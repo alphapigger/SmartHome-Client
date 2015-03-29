@@ -81,9 +81,9 @@ def start_monitor():
         while humidity is None or temperature is None:
             time.sleep(2)
             humidity, temperature = ht.acquire()
-            i += 1
             if i > 10:
                 break
+            i += 1
         now = time.strftime('%Y%m%d%H%M')
         r = redis.Redis(host=settings['redis_host'],
                         port=settings['redis_port'],
@@ -100,7 +100,7 @@ def get_data():
     h_t = r.zrangebyscore('ht', old, now)
     if h_t:
         humidity, temperature = h_t[-1].split(' ')
-        if humidity is None or temperature is None:
+        if humidity == 'None' or temperature == 'None':
             ht = HTSensor()
             humidity, temperature = ht.acquire()
     else:
