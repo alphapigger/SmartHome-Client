@@ -2,8 +2,12 @@
 
 import time
 import json
+import signal
+import logging
 
 from .sensor import ht
+
+logger = logging.getLogger(__name__)
 
 
 class MessageHandler(object):
@@ -25,12 +29,22 @@ class MessageHandler(object):
         return json.dumps(response)
 
     def temperatureHandle(self):
-        # response = {'status': 0, 'err_msg': '', 'info': self.key}
-        # time.sleep(1)
-        humidity, temperature = ht.get_data(retry=5)
-        response = {'status': 0,
-                    'err_msg': '',
-                    'info': {'humidity': humidity,
-                             'temperature': temperature},
-                    }
-        return json.dumps(response)
+        def _timeout_handler(signum, frame):
+            raise AssertionError
+        try:
+            signal.signal(signal.SIGALRM, _timeout_handler)
+            signal.alarm(3)  # 超时时间为3秒
+            humidity, temperature = ht.get_data(retry=5)
+            signal.alarm(0)
+            response = {'status': 0,
+                        'err_msg': '',
+                        'info': {'humidity': humidity,
+                                 'temperature': temperature},
+                        }
+            return json.dumps(response)
+        except AssertionError:
+            logger.info('Acquire humidity and temperature timeout')
+            response = {'status': -1,
+                        'err_msg': '获取温度失败，请重新获取',
+                        'info': '获取温度失败，请重新获取'}
+            return json.dumps(response)

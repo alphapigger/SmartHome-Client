@@ -14,4 +14,5 @@ build:
 
 supervisord:
 	cp supervisor/supervisord /etc/init.d/
+	chmod +x /etc/init.d/supervisord
 	update-rc.d supervisord defaults

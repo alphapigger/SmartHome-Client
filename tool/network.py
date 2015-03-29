@@ -16,7 +16,7 @@ def manage():
     network_status = 0
     while True:
         if network_test('www.baidu.com'):
-            logger.info('network is ok')
+            # logger.info('network is ok')
             if network_status == 0:
                 restart_client()  # restart client
                 network_status = 1
