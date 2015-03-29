@@ -78,6 +78,7 @@ def start_monitor():
     while True:
         humidity, temperature = ht.acquire()
         while humidity is None or temperature is None:
+            time.sleep(random.randint(1, 3))
             humidity, temperature = ht.acquire()
         now = time.strftime('%Y%m%d%H%M')
         r = redis.Redis(host=settings['redis_host'],
