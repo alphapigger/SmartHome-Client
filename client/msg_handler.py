@@ -33,8 +33,8 @@ class MessageHandler(object):
             raise AssertionError
         try:
             signal.signal(signal.SIGALRM, _timeout_handler)
-            signal.alarm(3)  # 超时时间为3秒
-            humidity, temperature = ht.get_data(retry=5)
+            signal.alarm(2)  # 超时时间为2秒
+            humidity, temperature = ht.get_data(retry=4)
             signal.alarm(0)
             response = {'status': 0,
                         'err_msg': '',
