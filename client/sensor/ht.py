@@ -74,13 +74,16 @@ class HTSensor(object):
 
 def start_monitor():
     ht = HTSensor()
-    humidity, temperature = ht.acquire()
-    while humidity is None or temperature is None:
+    while True:
         humidity, temperature = ht.acquire()
-    now = time.strftime('%Y%m%d%H%M')
-    r = redis.Redis(host=settings['redis_host'], port=settings['redis_port'],
-                    db=settings['redis_db'])
-    r.zadd("ht", '%s %s' % (humidity, temperature), int(now))
+        while humidity is None or temperature is None:
+            humidity, temperature = ht.acquire()
+        now = time.strftime('%Y%m%d%H%M')
+        r = redis.Redis(host=settings['redis_host'],
+                        port=settings['redis_port'],
+                        db=settings['redis_db'])
+        r.zadd("ht", '%s %s' % (humidity, temperature), int(now))
+        time.sleep(600)
 
 
 def get_data():
