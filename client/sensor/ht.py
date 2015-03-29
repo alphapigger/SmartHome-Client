@@ -20,7 +20,7 @@ class HTSensor(object):
         self.temperature = None
 
     def _run(self):
-        time.sleep(random.randint(1, 5))
+        time.sleep(1)
         gpio.setwarnings(False)
         gpio.setmode(gpio.BCM)
         gpio.setup(self.channel, gpio.OUT)
@@ -77,9 +77,13 @@ def start_monitor():
     ht = HTSensor()
     while True:
         humidity, temperature = ht.acquire()
+        i = 0
         while humidity is None or temperature is None:
-            time.sleep(random.randint(1, 3))
+            time.sleep(2)
             humidity, temperature = ht.acquire()
+            i += 1
+            if i > 10:
+                break
         now = time.strftime('%Y%m%d%H%M')
         r = redis.Redis(host=settings['redis_host'],
                         port=settings['redis_port'],
@@ -93,9 +97,12 @@ def get_data():
                     db=settings['redis_db'])
     now = int(time.strftime('%Y%m%d%H%M'))
     old = now - 10  # 10分钟之前
-    h_t = r.zrangebyscore('ht', old, now)[-1]
+    h_t = r.zrangebyscore('ht', old, now)
     if h_t:
-        humidity, temperature = h_t.split(' ')
+        humidity, temperature = h_t[-1].split(' ')
+        if humidity is None or temperature is None:
+            ht = HTSensor()
+            humidity, temperature = ht.acquire()
     else:
         humidity, temperature = None, None
     return humidity, temperature
