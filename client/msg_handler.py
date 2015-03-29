@@ -29,22 +29,36 @@ class MessageHandler(object):
         return json.dumps(response)
 
     def temperatureHandle(self):
-        def _timeout_handler(signum, frame):
-            raise AssertionError
-        try:
-            signal.signal(signal.SIGALRM, _timeout_handler)
-            signal.alarm(2)  # 超时时间为2秒
-            humidity, temperature = ht.get_data(retry=4)
-            signal.alarm(0)
+        # def _timeout_handler(signum, frame):
+        #     raise AssertionError
+        # try:
+        #     signal.signal(signal.SIGALRM, _timeout_handler)
+        #     signal.alarm(2)  # 超时时间为2秒
+        #     humidity, temperature = ht.get_data()
+        #     signal.alarm(0)
+        #     response = {'status': 0,
+        #                 'err_msg': '',
+        #                 'info': {'humidity': humidity,
+        #                          'temperature': temperature},
+        #                 }
+        #     return json.dumps(response)
+        # except AssertionError:
+        #     logger.info('Acquire humidity and temperature timeout')
+        #     response = {'status': -1,
+        #                 'err_msg': '请检查温度湿度传感器的连接',
+        #                 'info': '温度湿度传感器或许未连接'}
+        #     return json.dumps(response)
+
+        humidity, temperature = ht.get_data()
+        if humidity is None or temperature is None:
+            response = {'status': -1,
+                        'err_msg': 'ERROR_NODATA',
+                        'info': '小兵正在拼死拼活获取数据中，请耐心等待...'}
+        else:
             response = {'status': 0,
                         'err_msg': '',
                         'info': {'humidity': humidity,
                                  'temperature': temperature},
                         }
-            return json.dumps(response)
-        except AssertionError:
-            logger.info('Acquire humidity and temperature timeout')
-            response = {'status': -1,
-                        'err_msg': '请检查温度湿度传感器的连接',
-                        'info': '温度湿度传感器或许未连接'}
-            return json.dumps(response)
+        return json.dumps(response)
+

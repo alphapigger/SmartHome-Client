@@ -4,6 +4,7 @@
 import RPi.GPIO as gpio
 import time
 import logging
+import redis
 
 from .. import settings
 
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class HTSensor(object):
-    def __init__(self, channel):
+    def __init__(self, channel=settings['ht_sensor_channel']):
         self.channel = channel
         self.data = []
         self.humidity = None
@@ -71,15 +72,24 @@ class HTSensor(object):
         return self.humidity, self.temperature
 
 
-def get_data(retry):
-    channel = settings['ht_sensor_channel']
-    ht = HTSensor(channel)
-
-    for i in xrange(retry):
+def start_monitor():
+    ht = HTSensor()
+    humidity, temperature = ht.acquire()
+    while humidity is None or temperature is None:
         humidity, temperature = ht.acquire()
-        if humidity is not None and temperature is not None:
-            break
+    now = time.strftime('%Y%m%d%H%M')
+    r = redis.Redis(host=settings['redis_host'], port=settings['redis_port'],
+                    db=settings['redis_db'])
+    r.zadd("ht", '%s %s' % (humidity, temperature), int(now))
 
+
+def get_data():
+    r = redis.Redis(host=settings['redis_host'], port=settings['redis_port'],
+                    db=settings['redis_db'])
+    now = int(time.strftime('%Y%m%d%H%M'))
+    old = now - 10  # 10分钟之前
+    h_t = r.zrangebyscore('ht', old, now)
+    humidity, temperature = h_t.split(' ')
     return humidity, temperature
 
 if __name__ == '__main__':
