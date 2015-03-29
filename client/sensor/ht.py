@@ -58,7 +58,7 @@ class HTSensor(object):
 
         logger.info('humidity: %s temperature: %s check: %s' %
                     (humidity, temperature, check))
-        if humidity + temperature == check:
+        if check - 3 <= humidity + temperature <= check + 3:
             self.humidity = humidity
             self.temperature = temperature
             return True
