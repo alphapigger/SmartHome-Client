@@ -5,6 +5,7 @@ import RPi.GPIO as gpio
 import time
 import logging
 import redis
+import random
 
 from .. import settings
 
@@ -19,7 +20,7 @@ class HTSensor(object):
         self.temperature = None
 
     def _run(self):
-        time.sleep(3)
+        time.sleep(random.randint(1, 5))
         gpio.setwarnings(False)
         gpio.setmode(gpio.BCM)
         gpio.setup(self.channel, gpio.OUT)
