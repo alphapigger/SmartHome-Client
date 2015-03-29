@@ -45,6 +45,6 @@ class MessageHandler(object):
         except AssertionError:
             logger.info('Acquire humidity and temperature timeout')
             response = {'status': -1,
-                        'err_msg': '获取温度失败，请重新获取',
-                        'info': '获取温度失败，请重新获取'}
+                        'err_msg': '请检查温度湿度传感器的连接',
+                        'info': '温度湿度传感器或许未连接'}
             return json.dumps(response)
