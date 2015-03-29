@@ -80,7 +80,7 @@ def start_monitor():
         humidity, temperature = ht.acquire()
         i = 0
         while humidity is None or temperature is None:
-            time.sleep(2)
+            time.sleep(random.randint(5, 10))
             humidity, temperature = ht.acquire()
             if i > 10:
                 break
