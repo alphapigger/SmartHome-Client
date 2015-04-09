@@ -1,2 +1,2 @@
-# raspberry-pi-wechat-client
-raspberry-pi-wechat-client
+# SmartHome Client
+SmartHome control center based on RaspberryPi
