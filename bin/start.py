@@ -4,11 +4,12 @@
 import threading
 
 import client.client as client
-from client.sensor import ht
+# from client.sensor import ht
+from client.manage import manager
 
 
 def main():
-    t = threading.Thread(target=ht.start_monitor)
+    t = threading.Thread(target=manager.start_monitor)
     t.start()
     client.start()
 
