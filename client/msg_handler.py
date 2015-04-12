@@ -60,8 +60,8 @@ class MessageHandler(object):
         #     return json.dumps(response)
 
         # humidity, temperature = ht.get_data()
-        manager.control("humtem")
-        humidity, temperature = None, None
+        humidity, temperature = manager.control("humtem")
+        # humidity, temperature = None, None
         if humidity is None or temperature is None:
             response = {'status': -1,
                         'err_msg': 'ERROR_NODATA',

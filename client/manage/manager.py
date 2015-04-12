@@ -19,6 +19,7 @@ class ClinetManager(object):
     def read(self):
         data = self.com.readline()
         logger.info('Receive msg : %r', data)
+        return data
 
     def receive(self):
         while True:
@@ -40,10 +41,13 @@ def control(msg):
         manager.write("light off")
     elif msg == "humtem":
         manager.write("humtem")
+        resp = manager.read()
+        resp = resp.split(' ')
+        return resp[1], resp[2]
 
 
-def start_monitor():
-    manager.receive()
+# def start_monitor():
+#     manager.receive()
 
 
 def main():
