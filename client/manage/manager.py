@@ -14,10 +14,7 @@ class ClinetManager(object):
     rate = 38400
 
     def __init__(self):
-        self.com = serial.Serial(self.port, self.rate,
-                                 bytesize=8, stopbits=1,
-                                 timeout=0, xonxoff=0,
-                                 rtscts=0)
+        self.com = serial.Serial(self.port, self.rate)
 
     def read(self):
         data = self.com.readline()
@@ -33,8 +30,10 @@ class ClinetManager(object):
         logger.info("Send msg: %r, length is: %s", msg, length)
 
 
+manager = ClinetManager()
+
+
 def control(msg):
-    manager = ClinetManager()
     if msg == "light on":
         manager.write("light on")
     elif msg == "light off":
@@ -42,14 +41,12 @@ def control(msg):
 
 
 def start_monitor():
-    manager = ClinetManager()
     manager.receive()
 
 
 def main():
-    worker = ClinetManager()
-    worker.read()
-    worker.write("light on")
+    manager.read()
+    manager.write("light on")
 
 if __name__ == '__main__':
     main()
