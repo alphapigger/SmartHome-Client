@@ -25,8 +25,17 @@ class MessageHandler(object):
         return msg_action[self.key]()
 
     def lightHandle(self):
-        response = {'status': 0, 'err_msg': '', 'info': self.key}
-        time.sleep(1)
+        # response = {'status': 0, 'err_msg': '', 'info': self.key}
+        # time.sleep(1)
+        # return json.dumps(response)
+        if self.key == 'LIGHT_ON':
+            command = 'light on'
+            info = 'opening'
+        elif self.key == 'LIGHT_OFF':
+            command = 'light off'
+            info = 'closed'
+        manager.control(command)
+        response = {'status': 0, 'err_msg': '', 'info': info}
         return json.dumps(response)
 
     def temperatureHandle(self):
@@ -51,7 +60,7 @@ class MessageHandler(object):
         #     return json.dumps(response)
 
         # humidity, temperature = ht.get_data()
-        manager.control("light on")
+        manager.control("humtem")
         humidity, temperature = None, None
         if humidity is None or temperature is None:
             response = {'status': -1,
