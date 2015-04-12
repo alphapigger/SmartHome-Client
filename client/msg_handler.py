@@ -2,10 +2,11 @@
 
 import time
 import json
-import signal
+# import signal
 import logging
 
-from .sensor import ht
+# from .sensor import ht
+from .manage import manager
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,9 @@ class MessageHandler(object):
         #                 'info': '温度湿度传感器或许未连接'}
         #     return json.dumps(response)
 
-        humidity, temperature = ht.get_data()
+        # humidity, temperature = ht.get_data()
+        manager.control("light on")
+        humidity, temperature = None, None
         if humidity is None or temperature is None:
             response = {'status': -1,
                         'err_msg': 'ERROR_NODATA',
@@ -61,4 +64,3 @@ class MessageHandler(object):
                                  'temperature': temperature},
                         }
         return json.dumps(response)
-

@@ -2,21 +2,54 @@
 # coding:utf-8
 
 import serial
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-class BaseManage(object):
+class ClinetManager(object):
     '''
     '''
+    port = "/dev/ttyAMA0"
+    rate = 38400
+
     def __init__(self):
-        pass
+        self.com = serial.Serial(self.port, self.rate,
+                                 bytesize=8, stopbits=1,
+                                 timeout=0, xonxoff=0,
+                                 rtscts=0)
+
+    def read(self):
+        data = self.com.readline()
+        logger.info('Receive msg : %r', data)
+
+    def receive(self):
+        while True:
+            self.read()
+
+    def write(self, msg):
+        msg += "\\"
+        length = self.com.write(msg)
+        logger.info("Send msg: %r, length is: %s", msg, length)
+
+
+def control(msg):
+    manager = ClinetManager()
+    if msg == "light on":
+        manager.write("light on")
+    elif msg == "light off":
+        manager.write("light off")
+
+
+def start_monitor():
+    manager = ClinetManager()
+    manager.receive()
 
 
 def main():
-    com = serial.Serial("/dev/ttyAMA0", 38400, bytesize=8, parit='N',
-                        stopbits=1, timeout=0, xonxoff=0, rtscts=0)
-    while True:
-        command = raw_input("Enter command")
-        com.write(command)
+    worker = ClinetManager()
+    worker.read()
+    worker.write("light on")
 
 if __name__ == '__main__':
     main()
