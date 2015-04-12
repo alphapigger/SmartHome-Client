@@ -38,6 +38,8 @@ def control(msg):
         manager.write("light on")
     elif msg == "light off":
         manager.write("light off")
+    elif msg == "humtem":
+        manager.write("humtem")
 
 
 def start_monitor():
