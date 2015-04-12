@@ -43,7 +43,10 @@ def control(msg):
         manager.write("humtem")
         resp = manager.read()
         resp = resp.split(' ')
-        return resp[1], resp[2]
+        if len(resp) == 3:
+            return resp[1], resp[2]
+        else:
+            return None, None
 
 
 # def start_monitor():
