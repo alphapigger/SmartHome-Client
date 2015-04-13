@@ -216,7 +216,7 @@ def verbose_ping(dest_addr, timeout = 2, count = 4):
     print
 
 
-def network_test(dest_addr, timeout=2, count=4):
+def network_test(dest_addr, timeout=4, count=4):
     succ_times = 0
     for i in xrange(count):
         try:
@@ -227,7 +227,7 @@ def network_test(dest_addr, timeout=2, count=4):
         if delay is not None:
             succ_times += 1
     succ_rate = succ_times / float(count)
-    if succ_rate >= 0.6:
+    if succ_rate >= 0.5:
         return True
     else:
         return False
