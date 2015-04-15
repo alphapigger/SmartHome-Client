@@ -2,6 +2,7 @@
 
 import pycurl
 import StringIO
+import json
 
 
 class CurlHelper(object):
@@ -19,7 +20,7 @@ class CurlHelper(object):
                 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.
         0.2214.111 Safari/537.36''')
 
-    def get(self, url, params=None, headers=None):
+    def get(self, url, params=None, headers=None, resp_type=''):
         if params:
             url = url % params
         if isinstance(url, unicode):
@@ -32,9 +33,11 @@ class CurlHelper(object):
         self.curl.perform()
         res = b.getvalue()
         b.close()
+        if resp_type == 'json':
+            return json.loads(res)
         return res
 
-    def post(self, url, params=None, headers=None, data=""):
+    def post(self, url, params=None, headers=None, data="", resp_type=''):
         if params:
             url = url % params
         if isinstance(url, unicode):
@@ -48,6 +51,8 @@ class CurlHelper(object):
         self.curl.perform()
         res = b.getvalue()
         b.close()
+        if resp_type == 'json':
+            return json.loads(res)
         return res
 
     def close(self):

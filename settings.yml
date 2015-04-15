@@ -2,11 +2,15 @@
 device_id: 1
 server_host: '54.148.6.4'
 server_port: 8888
+device_info_api: 'http://sun.codemagic.tk/device/new'
+sensor_data_api: 'http://sun.codemagic.tk/device/sensor/data'
 
 redis_host: '127.0.0.1'
 redis_port: 6379
 redis_db: 0
 ht_sensor_channel: 17
+
+
 
 logging:
   version: 1

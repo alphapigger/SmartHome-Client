@@ -7,7 +7,7 @@ import time
 import logging
 import os
 
-from lib.ping import network_test
+from ..lib.ping import network_test
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def manage():
                 time.sleep(60)
             elif network_status == 1:
                 # 需要检测client是否存在，不存在则重启
-                client_exists()
+                keep_client_exist()  # 确保客户端存在
         else:
             logger.error('network error')
             network_status == 0
@@ -38,7 +38,7 @@ def restart_client():
     logger.info('restart client ...')
 
 
-def client_exists():
+def keep_client_exist():
     count = int(os.popen("ps -ef | grep bin/start.py | grep -v grep"
                          "| wc -l").read())
     time.sleep(1)
