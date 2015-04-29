@@ -55,5 +55,22 @@ class CurlHelper(object):
             return json.loads(res)
         return res
 
+    def put(self, url, data, headers=None, resp_type=''):
+        if isinstance(url, unicode):
+            url = url.encode('utf-8')
+        self.curl.setopt(pycurl.URL, url)
+        if headers:
+            self.curl.setopt(pycurl.HTTPHEADER, headers)
+        self.curl.setopt(pycurl.CUSTOMREQUEST, "PUT")
+        self.curl.setopt(pycurl.POSTFIELDS, data)
+        b = StringIO.StringIO()
+        self.curl.setopt(pycurl.WRITEFUNCTION, b.write)
+        self.curl.perform()
+        res = b.getvalue()
+        b.close()
+        if resp_type == 'json':
+            return json.loads(res)
+        return res
+
     def close(self):
         self.curl.close()

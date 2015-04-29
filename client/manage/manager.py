@@ -59,7 +59,7 @@ class SensorManager(object):
             'sensor_type': sensor.sensor_type
         }
         logger.info('api: %s, data: %r', register_url, data)
-        res = curl.post(
+        res = curl.put(
             register_url, data=json.dumps(data),
         )
         logger.info('Register sensor: %r, response: %r', data, res)
@@ -73,7 +73,7 @@ class SensorManager(object):
             'value': sensor.sensor_value
         }
         logger.info('api: %s, data: %r', upload_url, data)
-        res = curl.post(upload_url, data=json.dumps(data))
+        res = curl.put(upload_url, data=json.dumps(data))
         logger.info('Upload sensor data: %r, response: %r', data, res)
 
 
