@@ -23,4 +23,4 @@ encrypt:
 	ansible-vault encrypt settings.yml
 
 decrypt:
-	ansible-value decrypt settings.yml
+	ansible-vault decrypt settings.yml

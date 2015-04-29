@@ -4,12 +4,24 @@
 import serial
 import logging
 import json
+import redis
+import time
+
+try:
+    import cPickle as pickle
+except:
+    import pickle
 
 from ..lib import mcurl
 from .. import settings
 
 logger = logging.getLogger(__name__)
 curl = mcurl.CurlHelper()
+rconn = redis.Redis(
+    host=settings['redis_host'],
+    port=settings['redis_port'],
+    db=settings['redis_db'],
+)
 
 
 class Sensor(object):
@@ -17,15 +29,27 @@ class Sensor(object):
     LED_TYPE = 4
 
     def __init__(self, device_id, sensor_id, sensor_type, sensor_value=None):
+        self._retrieve_sensors()
         self.device_id = device_id
         self.sensor_id = sensor_id
         self.sensor_type = sensor_type
         self.sensor_value = sensor_value
+        self.sensors.update({str(sensor_id): {'type': int(sensor_type)}})
+        self._persist_sensors()
+
+    def _retrieve_sensors(self):
+        if not rconn.exists('sensors'):
+            rconn.set("sensors", pickle.dumps(dict()))
+        self.sensors = pickle.loads(rconn.get('sensors'))
+
+    def _persist_sensors(self):
+        rconn.set("sensors", pickle.dumps(self.sensors))
 
 
 class SensorManager(object):
     '''SensorManager
     '''
+
     @classmethod
     def register(cls, sensor):
         register_url = settings['sensor_register_api'] % sensor.device_id
@@ -87,5 +111,14 @@ class ZigManager(object):
                 sensor_value = data[3]
                 sensor = Sensor(device_id, sensor_id, sensor_type, sensor_value)
                 SensorManager.upload(sensor)
+
+    def hum_tem_work(self):
+        while True:
+            time.sleep(120)
+            sensors = pickle.loads(rconn.get('sensors'))
+            for id, info in sensors.items():
+                if info['type'] == Sensor.HUM_TEM_TYPE:
+                    cmd = "%s" % id
+                    self.write(cmd)
 
 zg_manager = ZigManager()
