@@ -10,10 +10,9 @@ from client.manage.manager import zg_manager
 def main():
     t = threading.Thread(target=zg_manager.monitor())
     t1 = threading.Thread(target=zg_manager.hum_tem_work())  # 持续获取湿度温度
-    t2 = threading.Thread(target=client.start())
-    t2.start()
     t1.start()
     t.start()
+    client.start()
 
 if __name__ == '__main__':
     main()
