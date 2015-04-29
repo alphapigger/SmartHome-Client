@@ -83,8 +83,8 @@ class ZigManager(object):
     SERIAL_PORT = '/dev/ttyAMA0'
     SERIAL_RATE = 38400
 
-    CMD_REGISTER = 1
-    CMD_DATA = 2
+    CMD_REGISTER = '1'
+    CMD_DATA = '2'
 
     def __init__(self):
         self.com = serial.Serial(self.SERIAL_PORT, self.SERIAL_RATE)
@@ -105,8 +105,8 @@ class ZigManager(object):
             logger.info(data)
             device_id = settings['device_id']
             cmd = data[0]
-            sensor_id = data[1]
-            sensor_type = data[2]
+            sensor_id = int(data[1])
+            sensor_type = int(data[2])
             if cmd == self.CMD_REGISTER:
                 sensor = Sensor(device_id, sensor_id, sensor_type)
                 SensorManager.register(sensor)
