@@ -18,7 +18,7 @@ class MessageHandler(object):
         sensor_value = self.msg['sensor_value']
         cmd = "{0} {1}".format(sensor_id, sensor_value)
         zg_manager.write(cmd)
-
+        return 'update sensor status success'
 
 
     # def handle(self):
