@@ -59,13 +59,9 @@ def start():
 
 def handleMessage(s):
     while True:
-        # 持续读取服务器端消息
         recv_msg = s.recv(1024)
         logger.info('receive message %s' % recv_msg)
-        req = json.loads(recv_msg)
-        key = req.get('key', '')
-        info = req.get('info', '')
-        msg_handle = msg_handler.MessageHandler(key, info)
+        msg_handle = msg_handler.MessageHandler(json.loads(recv_msg))
         s.send(msg_handle.handle())
 
 if __name__ == '__main__':

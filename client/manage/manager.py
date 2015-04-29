@@ -9,85 +9,83 @@ from ..lib import mcurl
 from .. import settings
 
 logger = logging.getLogger(__name__)
+curl = mcurl.CurlHelper()
 
 
-class ClinetManager(object):
+class Sensor(object):
+    HUM_TEM_TYPE = 3
+    LED_TYPE = 4
+
+    def __init__(self, device_id, sensor_id, sensor_type, sensor_value=None):
+        self.device_id = device_id
+        self.sensor_id = sensor_id
+        self.sensor_type = sensor_type
+        self.sensor_value = sensor_value
+
+
+class SensorManager(object):
+    '''SensorManager
     '''
+    @classmethod
+    def register(cls, sensor):
+        register_url = settings['sensor_register_api'] % sensor.device_id
+        data = {
+            'device_id': sensor.device_id,
+            'sensor_id': sensor.sensor_id,
+            'sensor_type': sensor.sensor_type
+        }
+        res = curl.post(
+            register_url, data=json.dumps(data),
+        )
+        logger.info('Register sensor: %r, response: %r', data, res)
+
+    @classmethod
+    def upload(cls, sensor):
+        upload_url = settings['sensor_data_api'] % (sensor.device_id, sensor.sensor_id)
+        data = {
+            'device_id': sensor.device_id,
+            'sensor_id': sensor.sensor_id,
+            'value': sensor.sensor_value
+        }
+        res = curl.post(upload_url, data=json.dumps(data))
+        logger.info('Upload sensor data: %r, response: %r', data, res)
+
+
+class ZigManager(object):
+    '''ZigManager
     '''
-    port = "/dev/ttyAMA0"
-    rate = 38400
+    SERIAL_PORT = '/dev/ttyAMA0'
+    SERIAL_RATE = 38400
 
-    CMD_REGISTER = 1   # 数据格式为 1 device_id device_type
-    CMD_HUMTEM = 2     # 数据格式  2 device_id hum tem
-
-    SENSORS = list()
+    CMD_REGISTER = 1
+    CMD_DATA = 2
 
     def __init__(self):
-        self.com = serial.Serial(self.port, self.rate)
+        self.com = serial.Serial(self.SERIAL_PORT, self.SERIAL_RATE)
 
     def read(self):
         data = self.com.readline()
-        logger.info('Receive msg : %r', data)
+        logger.info('Read msg: %r', data)
         return data
 
     def write(self, msg):
         msg += "\\"
         length = self.com.write(msg)
-        logger.info("Send msg: %r, length is: %s", msg, length)
+        logger.info('Write msg: %r, len is: %s', msg, length)
 
-
-manager = ClinetManager()
-curl = mcurl.CurlHelper()
-
-
-def control(sensor_id, value):
-    command = "%s %s" % (sensor_id, value)
-    manager.write(command)
-
-
-def register_sensors(self, device_id, sensor_id, sensor_type):
-    api_url = settings['device_info_api']
-    post_data = {'device_id': device_id, 'sensor_id': sensor_id,
-                 'sensor_type': sensor_type}
-    logger.info('device_id %r register sensor_id %s sensor_type %s',
-                device_id, sensor_id, sensor_type)
-    res = curl.post(api_url, data=json.dumps(post_data))
-    logger.info('Receive msg from server: %r', res)
-
-
-def upload_sensor_data(self, device_id, sensor_id, sensor_value):
-    api_url = settings['sensor_data_api']
-    post_data = {'device_id': device_id, 'sensor_id': sensor_id,
-                 'value': sensor_value}
-    logger.info('upload device_id %s sensor_id %s value: %s',
-                device_id, sensor_id, sensor_value)
-    res = curl.post(api_url, data=json.dumps(post_data))
-    logger.info('Receive msg from server: %s', res)
-
-
-def start_monitor():
-    while True:
-        data = manager.read()
-        data = data.split()
-        command = data[0]
-        if command == manager.CMD_REGISTER:
-            sensor_id = data[1]
-            sensor_type = data[2]  # 1 hum&tem  2 led
+    def monitor(self):
+        while True:
+            data = self.read().split()
             device_id = settings['device_id']
-            manager.SENSORS.append({"id": sensor_id, "type": sensor_type})
-            register_sensors(device_id, sensor_id, sensor_type)
-        elif command == manager.CMD_HUMTEM:
+            cmd = data[0]
             sensor_id = data[1]
-            humidity = data[2]
-            temperature = data[3]
+            sensor_type = data[2]
+            if cmd == self.CMD_REGISTER:
+                sensor = Sensor(device_id, sensor_id, sensor_type)
+                SensorManager.register(sensor)
+            elif cmd == self.CMD_DATA:
+                sensor_value = data[3]
+                sensor = Sensor(device_id, sensor_id, sensor_type, sensor_value)
+                SensorManager.upload(sensor)
 
-            upload_sensor_data(settings['device_id'],
-                               sensor_id, '%s,%s' % (humidity, temperature))
-
-
-def main():
-    manager.read()
-    manager.write("light on")
-
-if __name__ == '__main__':
-    main()
+zg_manager = ZigManager()
