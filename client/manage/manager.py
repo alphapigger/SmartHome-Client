@@ -86,6 +86,8 @@ class ZigManager(object):
     CMD_REGISTER = '1'
     CMD_DATA = '2'
 
+    SLEEP_INTERVAL = 300
+
     def __init__(self):
         self.com = serial.Serial(self.SERIAL_PORT, self.SERIAL_RATE)
 
@@ -117,7 +119,7 @@ class ZigManager(object):
 
     def hum_tem_work(self):
         while True:
-            time.sleep(120)
+            time.sleep(self.SLEEP_INTERVAL)
             sensors = pickle.loads(rconn.get('sensors'))
             for id, info in sensors.items():
                 if info['type'] == Sensor.HUM_TEM_TYPE:
