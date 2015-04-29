@@ -102,6 +102,7 @@ class ZigManager(object):
     def monitor(self):
         while True:
             data = self.read().split()
+            logger.info(data)
             device_id = settings['device_id']
             cmd = data[0]
             sensor_id = data[1]
