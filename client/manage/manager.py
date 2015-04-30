@@ -86,7 +86,7 @@ class ZigManager(object):
     CMD_REGISTER = '1'
     CMD_DATA = '2'
 
-    SLEEP_INTERVAL = 300
+    SLEEP_INTERVAL = 120  # 调小时间间隔，防止5分钟发送的数据是错误的，这样可以重试3次
 
     def __init__(self):
         self.com = serial.Serial(self.SERIAL_PORT, self.SERIAL_RATE)
