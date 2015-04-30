@@ -118,6 +118,7 @@ class ZigManager(object):
                 SensorManager.upload(sensor)
 
     def hum_tem_work(self):
+        time.sleep(60);
         while True:
             time.sleep(self.SLEEP_INTERVAL)
             sensors = pickle.loads(rconn.get('sensors'))
